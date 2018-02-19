@@ -1,7 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
-import About from "./views/About.vue";
+import LoginPage from "./components/page/LoginPage.vue";
+import FbLoginPage from "./components/page/FbLoginPage.vue";
+import 'iview/dist/styles/iview.css';
+import 'tachyons/css/tachyons.min.css';
 
 Vue.use(Router);
 
@@ -10,12 +12,12 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: Home
+        component: LoginPage
     },
     {
-      path: "/about",
-      name: "about",
-      component: About
+      path: "/facebook-login",
+      name: "facebook",
+        component: FbLoginPage
     }
   ]
 });
