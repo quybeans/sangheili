@@ -17,8 +17,7 @@
 
 <script lang="js">
   import Vue from 'vue';
-  import FbLoginBox from '../social/FbLoginBox';
-  const request = require('superagent');
+  import FbLoginBox from '../social/FbLoginBox.vue';
 
   const { Spin, Icon } = require('iview');
 
@@ -28,13 +27,9 @@
       Spin, Icon, FbLoginBox
     },
     methods: {
-      getAllPage: function() {
-        console.log('calling');
-        request
-        .post('http://localhost:3012/page')
-        .send({accessToken: this.accessToken})
-        .end(function (err, res) {
-          console.log(res)
+      getAllPage: function(token) {
+        this.$http.post('page').then(function(response) {
+          console.log(token)
         })
       }
     },
@@ -52,8 +47,7 @@
         FB.getLoginStatus(function(response) {
           component.isConnecting = false;
           if (response.status==='connected') {
-            console.log(response.authResponse.accessToken);
-            component.getAllPage();
+            component.getAllPage(response.authResponse.accessToken);
             component.isFbConnected = true
           } else {
             component.isFbConnected = false
