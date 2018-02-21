@@ -15,11 +15,13 @@
   </div>
 </template>
 
-<script lang="js">
+<script lang="ts">
   import Vue from 'vue';
   import FbLoginBox from '../social/FbLoginBox.vue';
+  import { facebook } from 'facebook-js-sdk';
 
   const { Spin, Icon } = require('iview');
+  declare var FB: facebook.FacebookStatic;
 
   export default Vue.extend({
     name: "FbLoginPage",
@@ -27,7 +29,7 @@
       Spin, Icon, FbLoginBox
     },
     methods: {
-      getAllPage: function(token) {
+      getAllPage: function(token: string) {
         this.$http.post('page').then(function(response) {
           console.log(token)
         })
@@ -35,16 +37,16 @@
     },
     mounted: function() {
       var component = this;
+
       component.isConnecting = true;
-      window.fbAsyncInit = function() {
+      (<any>window).fbAsyncInit = function() {
         FB.init({
           appId: "1151926771557379",
-          autoLogAppEvents: true,
           xfbml: true,
           version: "v2.12"
         });
 
-        FB.getLoginStatus(function(response) {
+        FB.getLoginStatus(function(response: facebook.AuthResponse) {
           component.isConnecting = false;
           if (response.status==='connected') {
             component.getAllPage(response.authResponse.accessToken);
@@ -56,8 +58,8 @@
       };
 
       (function(d, s, id) {
-        var js,
-          fjs = d.getElementsByTagName(s)[0];
+        var js: any,
+          fjs: any = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) {
           return;
         }
