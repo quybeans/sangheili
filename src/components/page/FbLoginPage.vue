@@ -16,67 +16,77 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import FbLoginBox from '../social/FbLoginBox.vue';
-  import { facebook } from 'facebook-js-sdk';
+/// <reference path="../../../node_modules/@types/facebook-js-sdk/index.d.ts"/>
+import Vue from "vue";
+import FbLoginBox from "../social/FbLoginBox.vue";
+import { AxiosHelper } from "../../util/AxiosHelper";
 
-  const { Spin, Icon } = require('iview');
-  declare var FB: facebook.FacebookStatic;
+const { Spin, Icon } = require("iview");
 
-  export default Vue.extend({
-    name: "FbLoginPage",
-    components: {
-      Spin, Icon, FbLoginBox
-    },
-    methods: {
-      getAllPage: function(token: string) {
-        this.$http.post('page').then(function(response) {
-          console.log(token)
+export default Vue.extend({
+  name: "FbLoginPage",
+  components: {
+    Spin,
+    Icon,
+    FbLoginBox
+  },
+  methods: {
+    getAllPage: function() {
+      const axios = AxiosHelper.getInstance();
+      axios
+        .get("/posts1")
+        .then(response => {
+          console.log(response);
         })
-      }
-    },
-    mounted: function() {
-      var component = this;
-
-      component.isConnecting = true;
-      (<any>window).fbAsyncInit = function() {
-        FB.init({
-          appId: "1151926771557379",
-          xfbml: true,
-          version: "v2.12"
-        });
-
-        FB.getLoginStatus(function(response: facebook.AuthResponse) {
-          component.isConnecting = false;
-          if (response.status==='connected') {
-            component.getAllPage(response.authResponse.accessToken);
-            component.isFbConnected = true
-          } else {
-            component.isFbConnected = false
-          }
-        });
-      };
-
-      (function(d, s, id) {
-        var js: any,
-          fjs: any = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-          return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      })(document, "script", "facebook-jssdk");
-    },
-    data: function() {
-      return {
-        isFbConnected: false,
-        isConnecting: false,
-        currentAccessToken: ''
-      }
+        .catch(error => {
+          console.log(error);
+        });        
     }
-  });
+  },
+  mounted: function() {
+    var component = this;
+    component.isConnecting = true;
+    (<any>window).fbAsyncInit = function() {
+      FB.init({
+        appId: "1151926771557379",
+        xfbml: true,
+        version: "v2.12"
+      });
+
+      FB.getLoginStatus(function(response: facebook.AuthResponse) {
+        component.isConnecting = false;
+        if (response.status === "connected") {
+          console.log("Connected");
+          component.getAllPage();
+          component.isFbConnected = true;
+        } else {
+          console.log("NOT connected");        
+          component.getAllPage();
+          component.isFbConnected = false;
+        }
+      });
+    };
+
+    (function(d, s, id) {
+      var js: any,
+        fjs: any = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
+      }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, "script", "facebook-jssdk");
+  },
+  data: function() {
+    return {
+      isFbConnected: false,
+      isConnecting: false,
+      currentAccessToken: ""
+    };
+  }
+});
 </script>
 
 <style>
