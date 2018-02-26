@@ -10,6 +10,7 @@
     "baseUrl": ".",
     "types": [
       "node",
+      "facebook-js-sdk"
     ],
     "paths": {
       "@/*": [

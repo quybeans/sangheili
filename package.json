@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/facebook-js-sdk": "^2.8.3",
+    "axios": "^0.18.0",
     "iview": "^2.9.2",
     "tachyons": "^4.9.1",
     "vue": "^2.5.13",
